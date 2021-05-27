@@ -1,0 +1,3 @@
+include ':xjgps'
+include ':app'
+rootProject.name = "JGPSLocation"
