@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,8 +18,21 @@ public class JLocationService implements LocationListener {
 
     long CURTIME=0;
     long PREVTIME=0;
-    public JLocationService(Activity activity) {
+    TextView latView;TextView lonView;TextView accuracyView;
+    void viewLocation()
+    {
+        if(latView!=null && lonView!=null && accuracyView!=null)
+        {
+            latView.setText(""+JConfig.LATITUDE);
+            lonView.setText(""+JConfig.LONGITUDE);
+            accuracyView.setText(""+JConfig.ACCURACY);
+        }
+    }
+    public JLocationService(Activity activity, TextView latView, TextView lonView, TextView accuracyView) {
         JConfig.ACCURACY_NEXT=-1;
+        this.latView=latView;
+        this.lonView=lonView;
+        this.accuracyView=accuracyView;
         LocationManager locationManager = (LocationManager) JConfig.CONTEXT.getSystemService(JConfig.CONTEXT.LOCATION_SERVICE);
         LocationListener locationListener = this;
         if (ActivityCompat.checkSelfPermission( JConfig.CONTEXT, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission( JConfig.CONTEXT, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -42,7 +56,7 @@ public class JLocationService implements LocationListener {
             JConfig.LONGITUDE_NEXT=location.getLongitude();
             JConfig.ACCURACY_NEXT=location.getAccuracy();
         }
-
+        viewLocation();
         CURTIME=System.currentTimeMillis();
         PREVTIME=System.currentTimeMillis();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, locationListener);
@@ -71,6 +85,7 @@ public class JLocationService implements LocationListener {
             }
 
         }
+        viewLocation();
     }
 
 
